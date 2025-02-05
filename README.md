@@ -37,4 +37,4 @@ But we need to start somewhere, right?
 
 ## Project List
 
-1. [Personal Finance]()
+1. [Personal Finance](/personal_finance)
