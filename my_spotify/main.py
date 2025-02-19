@@ -1,5 +1,4 @@
 """
-
 * Steps below:
 *   0. Create Class
 *   0.1 Playlist
@@ -20,6 +19,21 @@
 *                   2.3.2.4 append to Album class
 *                   2.3.2.3 get Artist info
 *                   2.3.2.4 append to Artist class
-
-
 """
+
+from spotipy.client import Spotify
+import helper as h
+import contants as c
+import pandas as pd
+
+
+def main():
+    sp = h.authenticate()
+    user_playlists = h.get_user_playlists(sp)
+    year_end_lists = h.get_year_end_list(user_playlists)
+    df_fact_year_end_list = h.get_fact_list(sp, year_end_lists)
+    df_dim_album = h.get_dim_album(sp, df_fact_year_end_list)
+
+
+if __name__ == "__main__":
+    main()
