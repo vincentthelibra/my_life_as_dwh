@@ -79,6 +79,9 @@ class Postgres:
         return True
 
     def load_from_file(self, table_name, file_path, delimiter=","):
+
+        table_name = f"bronze.{table_name}"
+
         if not self.conn:
             print("Not connected to PostgreSQL.")
             return None
@@ -86,10 +89,33 @@ class Postgres:
         try:
             with self.conn.cursor() as cur:
                 with open(file_path, 'r') as f:
-                    cur.copy_from(f, table_name, sep=delimiter)
+                    query = f"COPY {table_name} FROM STDIN WITH CSV HEADER DELIMITER '{delimiter}'"
+                    cur.copy_expert(query, f)
                 self.conn.commit()
+                print(
+                    f"Successfully loaded data from {file_path} into {table_name}."
+                )
                 return True
         except psycopg2.Error as e:
             self.conn.rollback()
             print(f"Error copying from file: {e}")
+            return False
+
+    def truncate_table(self, table_name):
+
+        table_name = f"bronze.{table_name}"
+
+        if not self.conn:
+            print("Not connected to PostgreSQL.")
+            return False
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute(
+                    f"TRUNCATE TABLE {table_name} RESTART IDENTITY CASCADE")
+                self.conn.commit()
+                print(f"Successfully truncated table {table_name}.")
+                return True
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            print(f"Error truncating table {table_name}: {e}")
             return False
