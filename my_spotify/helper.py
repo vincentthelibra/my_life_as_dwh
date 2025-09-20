@@ -18,8 +18,8 @@ def extract_data():
     dim_artist = sph.get_dim_artist(fact_year_end_track)
     album_genre = GenreHandler()
     album_genre.authenticate()
-    album_ids = [album["album_id"] for album in dim_album]
-    dim_album_genre = album_genre.get_genres_for_albums(album_ids)
+    albums = dim_album
+    dim_album_genre = album_genre.get_genres_for_albums(albums)
 
     # return fact_year_end_track
     return fact_year_end_track, dim_album, dim_artist, dim_album_genre
