@@ -1,92 +1,54 @@
+import plotly.express as px
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import time
 
-st.title("Animated Timelapse Chart")
+conn = st.connection("postgresql", type="sql")
 
-# Sample data - replace with your actual data
-data = {
-    "Year": list(range(2015, 2025)) * 3,
-    "Category": ["Category A"] * 10 + ["Category B"] * 10 + ["Category C"] * 10,
-    "Count": [
-        10,
-        15,
-        23,
-        28,
-        35,
-        42,
-        48,
-        55,
-        62,
-        70,  # Category A
-        5,
-        8,
-        12,
-        18,
-        25,
-        30,
-        38,
-        45,
-        50,
-        58,  # Category B
-        15,
-        18,
-        20,
-        25,
-        28,
-        32,
-        35,
-        40,
-        45,
-        52,
-    ],  # Category C
-}
-df = pd.DataFrame(data)
+sql_query = """
+SELECT
+	DISTINCT fact.calendar_year,
+	album.album_genre,
+	COUNT(album.album_genre) OVER ( PARTITION BY fact.calendar_year, album.album_genre) AS genre_count
+FROM
+	gold.fact_year_end_track fact
+LEFT JOIN
+	gold.dim_album album
+	ON fact.album_id = album.album_id
+ORDER BY
+	fact.calendar_year;
+"""
 
-# Animation controls
-animation_speed = 0.01
-start_animation = st.button("Start Animation")
+df = conn.query(sql_query, ttl=600)
 
-if start_animation:
-    # Create placeholder for the chart
-    chart_placeholder = st.empty()
+# Create a complete grid of all years x all genres
+all_years = df["calendar_year"].unique()
+all_genres = df["album_genre"].unique()
+complete_grid = pd.MultiIndex.from_product(
+    [all_years, all_genres], names=["calendar_year", "album_genre"]
+).to_frame(index=False)
 
-    years = sorted(df["Year"].unique())
+# Merge with actual data, filling missing combinations with 0
+df = complete_grid.merge(df, on=["calendar_year", "album_genre"], how="left")
+df["genre_count"] = df["genre_count"].fillna(0)
 
-    # Animate through years
-    for i in range(1, len(years) + 1):
-        # Get data up to current year
-        current_data = df[df["Year"] <= years[i - 1]]
+df = df.sort_values(["calendar_year", "genre_count"], ascending=[True, False])
 
-        # Create line chart
-        fig = px.line(
-            current_data,
-            x="Year",
-            y="Count",
-            color="Category",
-            markers=True,
-            title=f"Category Counts Over Time (Up to {years[i - 1]})",
-        )
+st.title("Billboard Year End Top 100 Dashboard")
 
-        fig.update_layout(
-            xaxis_title="Year",
-            yaxis_title="Count",
-            xaxis=dict(range=[years[0] - 0.5, years[-1] + 0.5]),
-            yaxis=dict(range=[0, df["Count"].max() + 10]),
-        )
+fig = px.bar(
+    df,
+    x="genre_count",
+    y="album_genre",
+    color="album_genre",
+    animation_frame="calendar_year",
+    orientation="h",
+    range_x=[0, 100],
+    title="Genre Count Over Time",
+    labels={"genre_count": "Count", "album_genre": "Genre"},
+)
 
-        # Update the chart
-        chart_placeholder.plotly_chart(fig, use_container_width=True)
+fig.update_layout(
+    yaxis={"categoryorder": "total ascending"},
+)
 
-        # Wait before next frame
-        time.sleep(animation_speed)
-
-    st.success("Animation complete!")
-
-# Show full data
-if st.checkbox("Show final chart"):
-    fig_final = px.line(
-        df, x="Year", y="Count", color="Category", markers=True, title="Complete Data"
-    )
-    st.plotly_chart(fig_final, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
