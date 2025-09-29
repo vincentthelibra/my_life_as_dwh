@@ -1,39 +1,76 @@
 import plotly.express as px
 import streamlit as st
-import pandas as pd
+
+st.set_page_config(
+    page_title="Billboard Dashboard",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+)
 
 conn = st.connection("postgresql", type="sql")
 
 sql_query = """
+WITH all_years AS (
+    SELECT DISTINCT calendar_year
+    FROM gold.fact_year_end_track
+),
+all_genres AS (
+    SELECT DISTINCT album_genre
+    FROM gold.dim_album
+    WHERE album_genre IS NOT NULL
+),
+all_year_genre AS (
+    SELECT 
+        y.calendar_year,
+        g.album_genre
+    FROM all_years y
+    CROSS JOIN all_genres g
+),
+actual_counts AS (
+    SELECT
+        fact.calendar_year,
+        album.album_genre,
+        COUNT(*) AS genre_count
+    FROM gold.fact_year_end_track fact
+    LEFT JOIN gold.dim_album album
+        ON fact.album_id = album.album_id
+    WHERE album.album_genre IS NOT NULL
+    GROUP BY fact.calendar_year, album.album_genre
+)
 SELECT
-	DISTINCT fact.calendar_year,
-	album.album_genre,
-	COUNT(album.album_genre) OVER ( PARTITION BY fact.calendar_year, album.album_genre) AS genre_count
-FROM
-	gold.fact_year_end_track fact
-LEFT JOIN
-	gold.dim_album album
-	ON fact.album_id = album.album_id
+    ayg.calendar_year,
+    ayg.album_genre,
+    COALESCE(ac.genre_count, 0) AS genre_count
+FROM all_year_genre ayg
+LEFT JOIN actual_counts ac
+    ON ayg.calendar_year = ac.calendar_year
+    AND ayg.album_genre = ac.album_genre
 ORDER BY
-	fact.calendar_year;
+    ayg.calendar_year,
+    genre_count DESC;
 """
 
 df = conn.query(sql_query, ttl=600)
 
-# Create a complete grid of all years x all genres
-all_years = df["calendar_year"].unique()
-all_genres = df["album_genre"].unique()
-complete_grid = pd.MultiIndex.from_product(
-    [all_years, all_genres], names=["calendar_year", "album_genre"]
-).to_frame(index=False)
 
-# Merge with actual data, filling missing combinations with 0
-df = complete_grid.merge(df, on=["calendar_year", "album_genre"], how="left")
-df["genre_count"] = df["genre_count"].fillna(0)
+st.markdown(
+    "<h1 style='text-align: center; color: #1DB954;'>🎵 Billboard Year-End Top 100 Dashboard</h1>",
+    unsafe_allow_html=True,
+)
+st.markdown("---")
 
-df = df.sort_values(["calendar_year", "genre_count"], ascending=[True, False])
-
-st.title("Billboard Year End Top 100 Dashboard")
+genre_colors = {
+    "Rock": "#E74C3C",  # Red
+    "Pop": "#3498DB",  # Blue
+    "Hip Hop": "#9B59B6",  # Purple
+    "R&B": "#E67E22",  # Orange
+    "Country": "#F39C12",  # Yellow/Gold
+    "Jazz": "#1ABC9C",  # Turquoise
+    "Electronic": "#2ECC71",  # Green
+    "Classical": "#34495E",  # Dark Gray
+    "Latin": "#E91E63",  # Pink
+    "Alternative": "#16A085",  # Teal
+}
 
 fig = px.bar(
     df,
@@ -42,13 +79,23 @@ fig = px.bar(
     color="album_genre",
     animation_frame="calendar_year",
     orientation="h",
-    range_x=[0, 100],
+    # range_x=[0, 100],
     title="Genre Count Over Time",
     labels={"genre_count": "Count", "album_genre": "Genre"},
+    color_discrete_map=genre_colors,
 )
 
 fig.update_layout(
-    yaxis={"categoryorder": "total ascending"},
+    height=650,
+    yaxis={
+        "categoryorder": "total ascending",
+        "title": "",
+    },
+    xaxis={
+        "title": "",
+        "showticklabels": False,
+    },
+    showlegend=False,
 )
 
 st.plotly_chart(fig, use_container_width=True)
