@@ -49,7 +49,7 @@ filter_col_year, filter_col_genre, filter_col_artist = st.columns(3)
 
 with filter_col_year:
     with st.container(border=True):
-        st.selectbox(
+        selected_year = st.selectbox(
             "Year",
             (df_years["calendar_year"]),
         )
@@ -58,13 +58,13 @@ with filter_col_genre:
     sql_query = c.SQL_QUERY_GENRES
     df_genres = conn.query(sql_query, ttl=600)
     with st.container(border=True):
-        st.selectbox("Genre", (df_genres["genre"]))
+        selected_genre = st.selectbox("Genre", (df_genres["genre"]))
 
 with filter_col_artist:
     sql_query = c.SQL_QUERY_ARTISTS
     df_artists = conn.query(sql_query, ttl=600)
     with st.container(border=True):
-        st.selectbox("Artist", (df_artists["artist_name"]))
+        selected_artist = st.selectbox("Artist", (df_artists["artist_name"]))
 
 st.markdown("---")
 
@@ -75,17 +75,40 @@ st.markdown("---")
     metric_col_top_genre,
 ) = st.columns(4)
 
+sql_query = c.SQL_QUERY_SONGS
+df_songs = conn.query(sql_query, ttl=600)
+
+filtered_songs = df_songs[df_songs["calendar_year"] == selected_year]
+
+song_count = len(filtered_songs)
+unique_artists = int(filtered_songs["artist_id"].nunique())  # type: ignore[attr-defined]
+unique_albums = int(filtered_songs["album_id"].nunique())  # type: ignore[attr-defined]
+
+
+sql_query = c.SQL_QUERY_TREND
+df_trend = conn.query(sql_query, ttl=600)
+
+filtered_trend = df_trend[df_trend["calendar_year"] == selected_year]
+top_genre_row = filtered_trend[
+    filtered_trend["genre_count"] == filtered_trend["genre_count"].max()
+]
+top_genre_name = top_genre_row["album_genre"].values[0]  # type: ignore[attr-defined]
+
 with metric_col_song_count:
-    st.metric(label="Songs", value="100", delta="+12 vs prev. year")
+    st.metric(label="Songs", border=True, value=song_count)
 
 with metric_col_artist_count:
-    st.metric(label="Unique Artists", value="76", delta="-8 vs prev. year")
+    st.metric(label="Unique Artists", border=True, value=unique_artists)
 
 with metric_col_album_count:
-    st.metric(label="Unique Albums", value="64", delta="+5 vs prev. year")
+    st.metric(label="Unique Albums", border=True, value=unique_albums)
 
 with metric_col_top_genre:
-    st.metric(label="Most Represented Genre", value="Pop", delta="(by share of songs)")
+    st.metric(
+        label="Most Represented Genre",
+        border=True,
+        value=top_genre_name,
+    )
 
 st.markdown("---")
 
