@@ -1,0 +1,132 @@
+/* ===== HEADER STYLING ===== */
+[data-testid="stHeader"] {
+  background: transparent !important;
+}
+
+[data-testid="stExpandSidebarButton"] [data-testid="stIconMaterial"],
+[data-testid="stSidebarCollapseButton"] [data-testid="stIconMaterial"] {
+  color: #dadada !important;
+}
+
+/* ===== TITLE STYLING ===== */
+h1 {
+  text-align: center !important;
+  color: #1ed760 !important;
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+  padding-top: 0 !important;
+}
+
+h1 .music-icon {
+  color: #1ed760 !important;
+}
+
+/* Chart titles */
+h2,
+h3 {
+  color: #dadada !important;
+}
+
+[data-testid="stHeading"] {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* ===== DARK BACKGROUND ===== */
+[data-testid="stSidebarContent"],
+.block-container {
+  background: linear-gradient(
+    135deg,
+    #0f2027 0%,
+    #203a43 50%,
+    #2c5364 100%
+  ) !important;
+}
+
+/* Make all containers transparent */
+[data-testid="stLayoutWrapper"],
+[data-testid="stVerticalBlock"],
+[data-testid="stColumn"],
+[data-testid="column"],
+[data-testid="stElementContainer"],
+[data-testid="stHorizontalBlock"]:not(:has([data-testid="stMetric"])) {
+  background: transparent !important;
+}
+
+/* ===== SIDEBAR STYLING ===== */
+[data-testid="stSelectbox"] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+[data-testid="stSelectbox"] p {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #dadada !important;
+}
+
+/* ===== METRICS SECTION ===== */
+[data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) {
+  padding: 40px 20px !important;
+  border-radius: 10px !important;
+  margin-bottom: 30px !important;
+}
+
+[data-testid="stMetric"] {
+  padding: 20px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s !important;
+}
+
+[data-testid="stMetric"]:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+}
+
+[data-testid="stMetricLabel"] {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+[data-testid="stMetricLabel"] p {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  color: #666 !important;
+}
+
+[data-testid="stMetricValue"] {
+  text-align: center !important;
+  font-size: 36px !important;
+  font-weight: 700 !important;
+  color: #1ed760 !important;
+}
+
+/* ===== HORIZONTAL RULE ===== */
+hr {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  margin: 20px 0 !important;
+}
+
+/* ===== CHART STYLING ===== */
+[data-testid="stPlotlyChart"] {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important; /* Ensures chart corners respect border-radius */
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s !important;
+}
+
+[data-testid="stPlotlyChart"]:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+}

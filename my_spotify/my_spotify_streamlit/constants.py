@@ -38,5 +38,5 @@ SQL_QUERY_SONGS = """
 SELECT
     *
 FROM
-    gold.fact_year_end_track
+    gold.v_year_end_track
 """
