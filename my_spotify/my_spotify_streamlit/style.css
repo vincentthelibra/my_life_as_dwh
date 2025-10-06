@@ -54,6 +54,60 @@ h3 {
 }
 
 /* ===== SIDEBAR STYLING ===== */
+/* Sidebar header */
+[data-testid="stSidebarContent"] h2 {
+  color: #1ed760 !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  font-size: 18px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+}
+
+/* Clear All button */
+[data-testid="stSidebarContent"] button[kind="secondary"] {
+  background: rgba(30, 215, 96, 0.1) !important;
+  border: 2px solid #1ed760 !important;
+  color: #1ed760 !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  border-radius: 12px !important;
+  padding: 12px 20px !important;
+  transition: all 0.2s !important;
+}
+
+[data-testid="stSidebarContent"] button[kind="secondary"]:hover {
+  background: #1ed760 !important;
+  color: #0f2027 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(30, 215, 96, 0.4) !important;
+}
+
+/* Filter containers - match metric styling */
+[data-testid="stSidebarContent"]
+  [data-testid="stVerticalBlock"]
+  > div[data-testid="stVerticalBlock"] {
+  background: rgba(255, 255, 255, 0.05) !important;
+  padding: 20px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(30, 215, 96, 0.2) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  margin-bottom: 15px !important;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s !important;
+}
+
+[data-testid="stSidebarContent"]
+  [data-testid="stVerticalBlock"]
+  > div[data-testid="stVerticalBlock"]:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+  border-color: rgba(30, 215, 96, 0.5) !important;
+}
+
+/* Selectbox labels */
 [data-testid="stSelectbox"] {
   display: flex !important;
   flex-direction: column !important;
@@ -66,6 +120,36 @@ h3 {
   text-transform: uppercase !important;
   letter-spacing: 1px !important;
   color: #dadada !important;
+  margin-bottom: 8px !important;
+}
+
+/* Selectbox dropdown styling */
+[data-testid="stSelectbox"] > div > div {
+  background: rgba(15, 32, 39, 0.8) !important;
+  border: 1px solid rgba(30, 215, 96, 0.3) !important;
+  border-radius: 8px !important;
+  color: #dadada !important;
+}
+
+[data-testid="stSelectbox"] > div > div:hover {
+  border-color: #1ed760 !important;
+}
+
+/* Dropdown options */
+[data-baseweb="popover"] {
+  background: rgba(15, 32, 39, 0.95) !important;
+  border: 1px solid rgba(30, 215, 96, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+[data-baseweb="popover"] li {
+  color: #dadada !important;
+  background: transparent !important;
+}
+
+[data-baseweb="popover"] li:hover {
+  background: rgba(30, 215, 96, 0.2) !important;
+  color: #1ed760 !important;
 }
 
 /* ===== METRICS SECTION ===== */
@@ -129,4 +213,83 @@ hr {
 [data-testid="stPlotlyChart"]:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+}
+
+/* ===== TABLE STYLING ===== */
+/* Table container */
+[data-testid="stDataFrame"] {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  overflow: hidden !important;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s !important;
+}
+
+[data-testid="stDataFrame"]:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+}
+
+/* Table header */
+[data-testid="stDataFrame"] thead tr th {
+  background: rgba(30, 215, 96, 0.15) !important;
+  color: #1ed760 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-size: 13px !important;
+  padding: 16px 12px !important;
+  border-bottom: 2px solid #1ed760 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+}
+
+/* Table rows */
+[data-testid="stDataFrame"] tbody tr {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  transition: background 0.2s !important;
+}
+
+[data-testid="stDataFrame"] tbody tr:hover {
+  background: rgba(30, 215, 96, 0.1) !important;
+}
+
+/* Alternating row colors */
+[data-testid="stDataFrame"] tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-testid="stDataFrame"] tbody tr:nth-child(even):hover {
+  background: rgba(30, 215, 96, 0.1) !important;
+}
+
+/* Table cells */
+[data-testid="stDataFrame"] tbody tr td {
+  color: #dadada !important;
+  padding: 14px 12px !important;
+  font-size: 14px !important;
+}
+
+/* Caption styling */
+.element-container:has([data-testid="stDataFrame"]) + .element-container p {
+  text-align: center !important;
+  color: #666 !important;
+  font-size: 13px !important;
+  font-style: italic !important;
+  margin-top: 10px !important;
+}
+
+/* Info message when no data */
+[data-testid="stNotification"] {
+  background: rgba(30, 215, 96, 0.1) !important;
+  border: 1px solid rgba(30, 215, 96, 0.3) !important;
+  border-radius: 12px !important;
+  color: #dadada !important;
+}
+
+[data-testid="stNotification"] [data-testid="stMarkdownContainer"] p {
+  color: #dadada !important;
 }
