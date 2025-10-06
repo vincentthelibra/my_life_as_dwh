@@ -11,7 +11,8 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-css_path = pathlib.Path("./style.css")
+script_dir = pathlib.Path(__file__).parent
+css_path = script_dir / "style.css"
 
 with open(css_path) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
