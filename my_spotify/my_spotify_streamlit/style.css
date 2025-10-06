@@ -296,6 +296,24 @@ hr {
 
 /* ===== RESPONSIVE DESIGN - TABLET ===== */
 @media (max-width: 1024px) {
+  /* Hide side padding columns on tablet */
+  [data-testid="stHorizontalBlock"] > [data-testid="column"]:first-child,
+  [data-testid="stHorizontalBlock"] > [data-testid="column"]:last-child {
+    display: none !important;
+  }
+
+  /* Make middle column full width */
+  [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(2) {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+  }
+
+  /* Add some padding to main content */
+  .block-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
   /* Reduce title size */
   h1 {
     font-size: 24px !important;
@@ -359,6 +377,12 @@ hr {
 
 /* ===== RESPONSIVE DESIGN - MOBILE ===== */
 @media (max-width: 768px) {
+  /* Less padding on mobile */
+  .block-container {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
   /* Further reduce title size */
   h1 {
     font-size: 20px !important;
