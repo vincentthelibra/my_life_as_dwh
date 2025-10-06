@@ -173,3 +173,7 @@ cython_debug/
 # credentials
 **/credentials.json
 **/token.json
+
+# Streamlit
+secrets.toml
+secrets.toml
