@@ -1,6 +1,7 @@
 import plotly.express as px
 import streamlit as st
 import constants as c
+import pathlib
 
 
 st.set_page_config(
@@ -10,7 +11,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-with open("style.css") as f:
+css_path = pathlib.Path("./style.css")
+
+with open(css_path) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 st.markdown(
