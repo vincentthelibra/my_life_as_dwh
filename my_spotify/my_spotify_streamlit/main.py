@@ -28,16 +28,51 @@ conn = st.connection("postgresql", type="sql")
 st.sidebar.header("Filters")
 
 with st.sidebar:
+    # ADD CLEAR ALL BUTTON at the top
+    if st.button("Clear All Filters", use_container_width=True):
+        st.session_state.selected_decade = "All"
+        st.session_state.selected_year = "All"
+        st.session_state.selected_genre = "All"
+        st.session_state.selected_artist = "All"
+        st.rerun()
+
+    st.write("")  # Add some spacing
+
+    filter_decade = st.container(border=True)
     filter_year = st.container(border=True)
     filter_genre = st.container(border=True)
     filter_artist = st.container(border=True)
+
+    with filter_decade:
+        sql_query = c.SQL_QUERY_YEARS
+        df_years = conn.query(sql_query, ttl=600)
+
+        df_decades = df_years.copy()
+        df_decades["decade"] = (df_decades["calendar_year"] // 10) * 10
+        decades = sorted(df_decades["decade"].unique().tolist())
+        decade_options = ["All"] + decades
+
+        selected_decade = st.selectbox(
+            "Decade",
+            decade_options,
+            key="selected_decade",  # Add key
+        )
+
+        if selected_decade == "All":
+            filtered_decade = decades
+        else:
+            filtered_decade = [selected_decade]
 
     with filter_year:
         sql_query = c.SQL_QUERY_YEARS
         df_years = conn.query(sql_query, ttl=600)
         year_options = ["All"] + df_years["calendar_year"].tolist()
 
-        selected_year = st.selectbox("Year", year_options)
+        selected_year = st.selectbox(
+            "Year",
+            year_options,
+            key="selected_year",  # Add key
+        )
 
         if selected_year == "All":
             filtered_year = df_years["calendar_year"].tolist()
@@ -49,7 +84,11 @@ with st.sidebar:
         df_genres = conn.query(sql_query, ttl=600)
         genre_options = ["All"] + df_genres["genre"].tolist()
 
-        selected_genre = st.selectbox("Genre", genre_options)
+        selected_genre = st.selectbox(
+            "Genre",
+            genre_options,
+            key="selected_genre",  # Add key
+        )
 
         if selected_genre == "All":
             filtered_genre = df_genres["genre"].tolist()
@@ -59,16 +98,18 @@ with st.sidebar:
     with filter_artist:
         sql_query = c.SQL_QUERY_ARTISTS
         df_artists = conn.query(sql_query, ttl=600)
-
         artist_options = ["All"] + df_artists["artist_name"].tolist()
 
-        selected_artist = st.selectbox("Artist", artist_options)
+        selected_artist = st.selectbox(
+            "Artist",
+            artist_options,
+            key="selected_artist",  # Add key
+        )
 
         if selected_artist == "All":
             filtered_artist = df_artists["artist_name"].tolist()
         else:
             filtered_artist = [selected_artist]
-
 
 main_col1, main_col2, main_col3 = st.columns([1, 9, 1])
 
@@ -90,6 +131,10 @@ with main_col2:
         filtered_songs = df_songs[df_songs["calendar_year"] == selected_year]
     else:
         filtered_songs = df_songs
+
+    if selected_decade != "All":
+        filtered_songs["decade"] = (filtered_songs["calendar_year"] // 10) * 10
+        filtered_songs = filtered_songs[filtered_songs["decade"] == selected_decade]
 
     if selected_genre != "All":
         filtered_songs = filtered_songs[filtered_songs["album_genre"] == selected_genre]
@@ -363,3 +408,74 @@ with main_col2:
         )
 
         st.plotly_chart(fig, use_container_width=True)
+
+st.write("")
+st.write("")
+
+# TABLE SECTION
+st.subheader("Song Details")
+
+if len(filtered_songs) > 0:
+    # Select columns with correct names
+    table_data = filtered_songs[
+        [
+            "calendar_year",
+            "track_name",
+            "track_external_link",
+            "artist_name",
+            "artist_image",
+            "album_name",
+            "album_image",
+            "album_genre",
+        ]
+    ].copy()
+
+    table_data = table_data.rename(
+        columns={
+            "calendar_year": "Year",
+            "track_name": "Song",
+            "track_external_link": "Spotify",
+            "artist_name": "Artist",
+            "artist_image": "Artist Image",
+            "album_name": "Album",
+            "album_image": "Album Cover",
+            "album_genre": "Genre",
+        }
+    )
+
+    # Sort by year (most recent first)
+    table_data = table_data.sort_values("Year", ascending=False)
+
+    st.dataframe(
+        table_data,
+        use_container_width=True,
+        hide_index=True,
+        height=500,
+        column_config={
+            "Album Cover": st.column_config.ImageColumn(
+                "Album Cover",
+                width="small",
+            ),
+            "Artist Image": st.column_config.ImageColumn(
+                "Artist Image",
+                width="small",
+            ),
+            "Year": st.column_config.NumberColumn(
+                "Year",
+                width="small",
+            ),
+            "Spotify": st.column_config.LinkColumn(
+                "🎵 Spotify",
+                display_text="Listen",
+                width="small",
+            ),
+            "Genre": st.column_config.TextColumn(
+                "Genre",
+                width="small",
+            ),
+        },
+    )
+
+    st.caption(f"Showing {len(table_data)} songs")
+else:
+    st.info("No songs match the selected filters.")
