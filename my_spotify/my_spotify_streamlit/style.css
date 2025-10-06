@@ -204,7 +204,7 @@ hr {
 [data-testid="stPlotlyChart"] {
   border-radius: 12px !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-  overflow: hidden !important; /* Ensures chart corners respect border-radius */
+  overflow: hidden !important;
   transition:
     transform 0.2s,
     box-shadow 0.2s !important;
@@ -292,4 +292,156 @@ hr {
 
 [data-testid="stNotification"] [data-testid="stMarkdownContainer"] p {
   color: #dadada !important;
+}
+
+/* ===== RESPONSIVE DESIGN - TABLET ===== */
+@media (max-width: 1024px) {
+  /* Reduce title size */
+  h1 {
+    font-size: 24px !important;
+    margin-bottom: 15px !important;
+  }
+
+  h2,
+  h3 {
+    font-size: 18px !important;
+  }
+
+  /* Reduce sidebar padding */
+  [data-testid="stSidebarContent"]
+    [data-testid="stVerticalBlock"]
+    > div[data-testid="stVerticalBlock"] {
+    padding: 15px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Reduce metrics padding */
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) {
+    padding: 20px 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  [data-testid="stMetric"] {
+    padding: 15px !important;
+  }
+
+  [data-testid="stMetricValue"] {
+    font-size: 28px !important;
+  }
+
+  [data-testid="stMetricLabel"] p {
+    font-size: 12px !important;
+  }
+
+  /* Reduce chart margins */
+  [data-testid="stPlotlyChart"] {
+    margin-bottom: 15px !important;
+  }
+
+  /* Reduce hover effects on touch devices */
+  [data-testid="stMetric"]:hover,
+  [data-testid="stPlotlyChart"]:hover,
+  [data-testid="stDataFrame"]:hover {
+    transform: none !important;
+  }
+
+  /* Table adjustments */
+  [data-testid="stDataFrame"] thead tr th {
+    font-size: 11px !important;
+    padding: 12px 8px !important;
+  }
+
+  [data-testid="stDataFrame"] tbody tr td {
+    font-size: 12px !important;
+    padding: 10px 8px !important;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN - MOBILE ===== */
+@media (max-width: 768px) {
+  /* Further reduce title size */
+  h1 {
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+
+  h2,
+  h3 {
+    font-size: 16px !important;
+  }
+
+  /* Compact sidebar */
+  [data-testid="stSidebarContent"] h2 {
+    font-size: 16px !important;
+    margin-bottom: 15px !important;
+  }
+
+  [data-testid="stSidebarContent"]
+    [data-testid="stVerticalBlock"]
+    > div[data-testid="stVerticalBlock"] {
+    padding: 12px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* Stack metrics more compactly */
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) {
+    padding: 15px 5px !important;
+    margin-bottom: 15px !important;
+  }
+
+  [data-testid="stMetric"] {
+    padding: 12px !important;
+    margin-bottom: 10px !important;
+  }
+
+  [data-testid="stMetricValue"] {
+    font-size: 24px !important;
+  }
+
+  [data-testid="stMetricLabel"] p {
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Remove all hover effects on mobile */
+  [data-testid="stMetric"]:hover,
+  [data-testid="stPlotlyChart"]:hover,
+  [data-testid="stDataFrame"]:hover,
+  [data-testid="stSidebarContent"] button[kind="secondary"]:hover,
+  [data-testid="stSidebarContent"]
+    [data-testid="stVerticalBlock"]
+    > div[data-testid="stVerticalBlock"]:hover {
+    transform: none !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  /* Compact table */
+  [data-testid="stDataFrame"] thead tr th {
+    font-size: 10px !important;
+    padding: 10px 6px !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  [data-testid="stDataFrame"] tbody tr td {
+    font-size: 11px !important;
+    padding: 8px 6px !important;
+  }
+
+  /* Smaller clear button */
+  [data-testid="stSidebarContent"] button[kind="secondary"] {
+    padding: 10px 15px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* ===== DISABLE HOVER ON TOUCH DEVICES ===== */
+@media (hover: none) {
+  [data-testid="stMetric"]:hover,
+  [data-testid="stPlotlyChart"]:hover,
+  [data-testid="stDataFrame"]:hover,
+  [data-testid="stSidebarContent"]
+    [data-testid="stVerticalBlock"]
+    > div[data-testid="stVerticalBlock"]:hover {
+    transform: none !important;
+  }
 }
