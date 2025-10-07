@@ -294,6 +294,48 @@ hr {
   color: #dadada !important;
 }
 
+/* ===== IMAGE HOVER EFFECTS ===== */
+/* Target images in the resizable dataframe */
+[data-testid="stDataFrameResizable"] img {
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  border: 2px solid transparent !important;
+  border-radius: 8px !important;
+}
+
+/* Hover effect for images - enlarge and bring to front */
+[data-testid="stDataFrameResizable"] img:hover {
+  transform: scale(3.5) !important;
+  z-index: 1000 !important;
+  position: relative !important;
+  box-shadow: 0 12px 30px rgba(30, 215, 96, 0.5) !important;
+  border: 2px solid #1ed760 !important;
+  border-radius: 8px !important;
+}
+
+/* Allow overflow in all dataframe containers */
+[data-testid="stDataFrameResizable"],
+[data-testid="stDataFrameResizable"] > div,
+[data-testid="stDataFrameResizable"] [role="row"],
+[data-testid="stDataFrameResizable"] [role="gridcell"] {
+  overflow: visible !important;
+}
+
+/* Ensure cells can show overflowing images */
+[data-testid="stDataFrame"] [role="gridcell"] {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Table container must allow overflow */
+[data-testid="stDataFrame"] {
+  overflow: visible !important;
+}
+
+[data-testid="stDataFrame"] > div {
+  overflow: visible !important;
+}
+
 /* ===== RESPONSIVE DESIGN - TABLET ===== */
 @media (max-width: 1024px) {
   /* Hide side padding columns on tablet */
@@ -372,6 +414,11 @@ hr {
   [data-testid="stDataFrame"] tbody tr td {
     font-size: 12px !important;
     padding: 10px 8px !important;
+  }
+
+  /* Reduce image scale on tablets */
+  [data-testid="stDataFrameResizable"] img:hover {
+    transform: scale(2.5) !important;
   }
 }
 
@@ -456,6 +503,12 @@ hr {
     padding: 10px 15px !important;
     font-size: 12px !important;
   }
+
+  /* Smaller image hover on mobile */
+  [data-testid="stDataFrameResizable"] img:hover {
+    transform: scale(1.5) !important;
+    box-shadow: 0 8px 20px rgba(30, 215, 96, 0.4) !important;
+  }
 }
 
 /* ===== DISABLE HOVER ON TOUCH DEVICES ===== */
@@ -467,5 +520,12 @@ hr {
     [data-testid="stVerticalBlock"]
     > div[data-testid="stVerticalBlock"]:hover {
     transform: none !important;
+  }
+
+  /* Disable image hover on touch devices */
+  [data-testid="stDataFrameResizable"] img:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    border: 2px solid transparent !important;
   }
 }
