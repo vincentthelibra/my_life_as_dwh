@@ -17,10 +17,6 @@ h1 {
   padding-top: 0 !important;
 }
 
-h1 .music-icon {
-  color: #1ed760 !important;
-}
-
 /* Chart titles */
 h2,
 h3 {
@@ -43,14 +39,41 @@ h3 {
   ) !important;
 }
 
-/* Make all containers transparent */
+/* Make all containers transparent - EXCEPT button and table containers */
 [data-testid="stLayoutWrapper"],
 [data-testid="stVerticalBlock"],
 [data-testid="stColumn"],
 [data-testid="column"],
-[data-testid="stElementContainer"],
 [data-testid="stHorizontalBlock"]:not(:has([data-testid="stMetric"])) {
   background: transparent !important;
+}
+
+/* Keep element containers transparent but fix button and table container width */
+[data-testid="stElementContainer"]:not(:has(.stButton)):not(
+    :has([data-testid="stDataFrame"])
+  ):not(:has([data-testid="stDataFrameResizable"])) {
+  background: transparent !important;
+}
+
+/* Fix button container to be full width */
+[data-testid="stSidebarContent"]
+  [data-testid="stElementContainer"]:has(.stButton) {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Fix table container to be full width */
+[data-testid="stElementContainer"]:has([data-testid="stDataFrame"]),
+[data-testid="stElementContainer"]:has([data-testid="stDataFrameResizable"]) {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Fix the resizable dataframe itself */
+[data-testid="stDataFrameResizable"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
 }
 
 /* ===== SIDEBAR STYLING ===== */
@@ -75,6 +98,7 @@ h3 {
   border-radius: 12px !important;
   padding: 12px 20px !important;
   transition: all 0.2s !important;
+  width: 100% !important;
 }
 
 [data-testid="stSidebarContent"] button[kind="secondary"]:hover {
@@ -157,6 +181,17 @@ h3 {
   padding: 40px 20px !important;
   border-radius: 10px !important;
   margin-bottom: 30px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 1.5rem !important;
+}
+
+/* Force all metric columns to be equal width on desktop */
+[data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) > * {
+  flex: 1 1 0px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
 }
 
 [data-testid="stMetric"] {
@@ -167,6 +202,8 @@ h3 {
   transition:
     transform 0.2s,
     box-shadow 0.2s !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 [data-testid="stMetric"]:hover {
@@ -201,6 +238,10 @@ hr {
 }
 
 /* ===== CHART STYLING ===== */
+[data-testid="stHorizontalBlock"]:has([data-testid="stPlotlyChart"]) {
+  gap: 2.5rem !important;
+}
+
 [data-testid="stPlotlyChart"] {
   border-radius: 12px !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
@@ -220,15 +261,54 @@ hr {
 [data-testid="stDataFrame"] {
   border-radius: 12px !important;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
-  overflow: hidden !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
   transition:
     transform 0.2s,
     box-shadow 0.2s !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 [data-testid="stDataFrame"]:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 12px 35px rgba(30, 215, 96, 0.3) !important;
+}
+
+/* Give columns more breathing room */
+[data-testid="stDataFrame"] thead tr th,
+[data-testid="stDataFrame"] tbody tr td {
+  padding: 16px 20px !important;
+  white-space: normal !important;
+  min-width: 120px !important;
+}
+
+/* Year column can be narrower */
+[data-testid="stDataFrame"] thead tr th:first-child,
+[data-testid="stDataFrame"] tbody tr td:first-child {
+  min-width: 80px !important;
+}
+
+/* Image columns should be medium width */
+[data-testid="stDataFrame"] thead tr th:nth-child(5),
+[data-testid="stDataFrame"] tbody tr td:nth-child(5),
+[data-testid="stDataFrame"] thead tr th:nth-child(7),
+[data-testid="stDataFrame"] tbody tr td:nth-child(7) {
+  min-width: 80px !important;
+  text-align: center !important;
+}
+
+/* Spotify link column */
+[data-testid="stDataFrame"] thead tr th:nth-child(3),
+[data-testid="stDataFrame"] tbody tr td:nth-child(3) {
+  min-width: 100px !important;
+  text-align: center !important;
+}
+
+/* Genre column */
+[data-testid="stDataFrame"] thead tr th:last-child,
+[data-testid="stDataFrame"] tbody tr td:last-child {
+  min-width: 100px !important;
 }
 
 /* Table header */
@@ -239,7 +319,6 @@ hr {
   text-transform: uppercase !important;
   letter-spacing: 1px !important;
   font-size: 13px !important;
-  padding: 16px 12px !important;
   border-bottom: 2px solid #1ed760 !important;
   position: sticky !important;
   top: 0 !important;
@@ -269,7 +348,6 @@ hr {
 /* Table cells */
 [data-testid="stDataFrame"] tbody tr td {
   color: #dadada !important;
-  padding: 14px 12px !important;
   font-size: 14px !important;
 }
 
@@ -301,6 +379,8 @@ hr {
   cursor: pointer !important;
   border: 2px solid transparent !important;
   border-radius: 8px !important;
+  max-width: 60px !important;
+  height: auto !important;
 }
 
 /* Hover effect for images - enlarge and bring to front */
@@ -327,27 +407,12 @@ hr {
   position: relative !important;
 }
 
-/* Table container must allow overflow */
-[data-testid="stDataFrame"] {
-  overflow: visible !important;
-}
-
-[data-testid="stDataFrame"] > div {
-  overflow: visible !important;
-}
-
 /* ===== RESPONSIVE DESIGN - TABLET ===== */
 @media (max-width: 1024px) {
   /* Hide side padding columns on tablet */
   [data-testid="stHorizontalBlock"] > [data-testid="column"]:first-child,
   [data-testid="stHorizontalBlock"] > [data-testid="column"]:last-child {
     display: none !important;
-  }
-
-  /* Make middle column full width */
-  [data-testid="stHorizontalBlock"] > [data-testid="column"]:nth-child(2) {
-    width: 100% !important;
-    flex: 1 1 100% !important;
   }
 
   /* Add some padding to main content */
@@ -433,7 +498,10 @@ hr {
   /* Further reduce title size */
   h1 {
     font-size: 20px !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 0px !important;
+    letter-spacing: 0px !important;
+    white-space: nowrap !important;
+    padding: 0px !important;
   }
 
   h2,
@@ -454,15 +522,32 @@ hr {
     margin-bottom: 8px !important;
   }
 
+  /* Force ALL horizontal containers to stack vertically on mobile */
+  [data-testid="stHorizontalBlock"] {
+    flex-direction: column !important;
+    padding-top: 0px !important;
+  }
+
+  /* Make all columns within horizontal blocks full width */
+  [data-testid="stHorizontalBlock"] > div[data-testid="stVerticalBlock"],
+  [data-testid="stHorizontalBlock"] > [data-testid="element-container"] {
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
   /* Stack metrics more compactly */
   [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) {
     padding: 15px 5px !important;
     margin-bottom: 15px !important;
+    align-items: center !important;
   }
 
   [data-testid="stMetric"] {
     padding: 12px !important;
     margin-bottom: 10px !important;
+    width: 100% !important;
+    max-width: 400px !important;
   }
 
   [data-testid="stMetricValue"] {
@@ -498,6 +583,12 @@ hr {
     padding: 8px 6px !important;
   }
 
+  /* Reduce column widths on mobile */
+  [data-testid="stDataFrame"] thead tr th,
+  [data-testid="stDataFrame"] tbody tr td {
+    min-width: 100px !important;
+  }
+
   /* Smaller clear button */
   [data-testid="stSidebarContent"] button[kind="secondary"] {
     padding: 10px 15px !important;
@@ -508,6 +599,11 @@ hr {
   [data-testid="stDataFrameResizable"] img:hover {
     transform: scale(1.5) !important;
     box-shadow: 0 8px 20px rgba(30, 215, 96, 0.4) !important;
+  }
+
+  /* Make images smaller on mobile */
+  [data-testid="stDataFrameResizable"] img {
+    max-width: 45px !important;
   }
 }
 
