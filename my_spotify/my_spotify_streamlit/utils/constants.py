@@ -40,3 +40,16 @@ SELECT
 FROM
     gold.v_year_end_track
 """
+
+GENRE_COLORS = {
+    "Rock": "#E74C3C",
+    "Pop": "#3498DB",
+    "Hip Hop": "#9B59B6",
+    "R&B": "#E67E22",
+    "Country": "#F39C12",
+    "Jazz": "#1ABC9C",
+    "Electronic": "#2ECC71",
+    "Classical": "#34495E",
+    "Latin": "#E91E63",
+    "Alternative": "#16A085",
+}
