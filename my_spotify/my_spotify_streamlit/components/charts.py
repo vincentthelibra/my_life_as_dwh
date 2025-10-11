@@ -68,7 +68,10 @@ def render_songs_by_decade_chart(df: pd.DataFrame):
     fig.update_layout(
         height=400,
         margin=dict(l=50, r=20, t=40, b=40),
-        xaxis={"title": ""},
+        xaxis={
+            "title": "",
+            "type": "category",
+        },
         yaxis={"title": ""},
         legend_title_text="Genre",
         showlegend=True,
